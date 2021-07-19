@@ -5,7 +5,7 @@ const { date } = require('../../lib/utils')
 
 module.exports = {
     index(req,res){
-        let { filter, page, limit } = req.query
+         let { filter, page, limit } = req.query
         page = page || 1
         limit = limit || 10
         let offset = limit * (page - 1)
@@ -38,9 +38,6 @@ module.exports = {
         const keys = Object.keys(req.body)
         for (key of keys){
 
-            req.body.ingredients = req.body.ingredients.toString() 
-            req.body.preparation = req.body.preparation.toString() 
-
             if (req.body[key] == ""){
                 
                 return res.send("Por favor, preencha todos os campos.")
@@ -58,7 +55,7 @@ module.exports = {
         const filesPromise = req.files.map(file => File.create({...file, recipe_id: recipeID}))
 
         await Promise.all(filesPromise)
-        console.log()
+
         return res.redirect(`/admin/recipe/${recipeID}`)
     },
     async show(req,res){
@@ -68,32 +65,30 @@ module.exports = {
 
         if (!selectedRecipe) return res.send("recipe not found!")
         
-        selectedRecipe.ingredients = selectedRecipe.ingredients.split(",")
-        selectedRecipe.preparation = selectedRecipe.preparation.split(",")
-        selectedRecipe.created_at = date(selectedRecipe.created_at).format
-
         const recipe_files = await File.findRecipeFile(selectedRecipe.id)
         const files = recipe_files.map(file => ({
             ...file,
             src: `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`
         }))
-        console.log(files)
+
         return res.render("admin/recipes/show", { item: selectedRecipe, images: files })
         
     },
     edit(req,res){
-        recipe.find(req.params.id, function(recipe) {
-            if (!recipe) return res.send("recipe not found!")
-            
-            recipe.ingredients = recipe.ingredients.split(",")
-            recipe.preparation = recipe.preparation.split(",")
-            recipe.created_at = date(recipe.created_at).format
+        try{
+            recipe.find(req.params.id, function(recipe) {
+                if (!recipe) return res.send("recipe not found!")
+                
+                recipe.created_at = date(recipe.created_at).format
 
-            const {chefs} = require('../models/recipe')
-            chefs( function(options){
-                return res.render("admin/recipes/edit", { recipe, chefsOptions: options })
+                const {chefs} = require('../models/recipe')
+                chefs( function(options){
+                    return res.render("admin/recipes/edit", { recipe, chefsOptions: options })
+                })
             })
-        })
+        }catch(err){
+            console.error(err)
+        }
     },
     put(req,res){
         const keys = Object.keys(req.body)
@@ -152,9 +147,6 @@ module.exports = {
         recipe.find(req.params.id, function(recipe) {
             if (!recipe) return res.send(`recipe not found! ${req.params.id}`)
             
-            recipe.ingredients = recipe.ingredients.split(",")
-            recipe.preparation = recipe.preparation.split(",")
-
         return res.render("site/recipe",{ item: recipe })
         })
     }
