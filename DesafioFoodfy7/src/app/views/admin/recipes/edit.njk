@@ -11,7 +11,7 @@
         <h1 class="page-title">Editando receita</h1>
         
     </div>
-    <form id="form-delete" method="POST" action="/admin/recipes?_method=DELETE" enctype="multipart/form-data">
+    <form id="form-delete" method="POST" action="/admin/recipes?_method=DELETE">
         <section class="delete">
             <input type="hidden" name="id" value={{recipe.id}}>
             <button type="submit" class="button">Delete</button>

@@ -188,6 +188,9 @@ if (document.querySelector('#receitas') && document.querySelector('.search-title
     }
 }
 
+
+// gerenciador de imagens
+
 const PhotosUpload = {
     input: "",
     preview: document.querySelector('#photos-preview'),
@@ -225,7 +228,7 @@ const PhotosUpload = {
         if (fileList.length > uploadLimit) {
             alert(`Envie no máximo ${uploadLimit} fotos.`)
             fileList.preventDefault()
-            return true;
+            return true
         }
 
         const photosDiv = []
@@ -241,7 +244,7 @@ const PhotosUpload = {
             return true
         }
 
-        return false;
+        return false
     },
     getAllFiles(){
         const dataTransfer = new ClipboardEvent("").clipboardData || new DataTransfer()

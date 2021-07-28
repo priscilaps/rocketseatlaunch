@@ -21,14 +21,14 @@ module.exports = {
         const query = `
             INSERT INTO chefs (
                 name,
-                avatar_url,
+                file_id,
                 created_at
             ) VALUES ($1, $2, $3)
             RETURNING id
         `
         const values = [
             data.name,
-            data.avatar_url,
+            data.avatar_url, //corrigir
             date(Date.now()).iso
         ]
 
@@ -90,6 +90,7 @@ module.exports = {
         })
     },
     delete(id, callback){
+        console.log(id)
         db.query(`DELETE FROM chefs WHERE id= $1`, [parseInt(id)], function(err, results){
             if (err) throw `Database Error! ${err}`
 
